@@ -2,12 +2,16 @@
    <body>
 
 
-    <h1> ORDERS </h1>
+    <h1> CUSTOMERS </h1>
 
 <table border="1">
-{% for x in orders %}
+{% for x in customers %}
 <tr>
-<td>{{ x.title}}</td>
+<td>{{ x.full_name}}</td>
+<td>{{ x.email }}</td>
+<td>{{ x.phone }}</td>
+<td>{{ x.birth_date }}</td>
+<td>{{ x.membership}}</td>
 <td><a href="edit/{{ x.id }}">edit</a></td>
 <td><a href="delete/{{ x.id }}">delete</a></td>
 </tr>

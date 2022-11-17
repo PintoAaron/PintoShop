@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     
-    path('hello/',views.Hello,name='Hello'),
+    path('hello/',views.Get_tags,name='Hello'),
+   
    
 ]
