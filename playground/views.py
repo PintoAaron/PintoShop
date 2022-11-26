@@ -4,8 +4,9 @@ from django.http import HttpResponse
 from django.db.models import Q,F,Count,Value
 from django.db.models.aggregates import Count,Max,Min,Avg
 from django.db.models.functions import Concat
+from django.db import transaction,connection
 from django.contrib.contenttypes.models import ContentType
-from store.models import Product,Customer,Collection,Order,OrderItem
+from store.models import Product,Customer,Collection,Order,OrderItem,Cart,CartItem
 from tags.models  import TaggedItem
 
 
@@ -33,5 +34,38 @@ def Get_tags(request):
     context = {'tag':list(query_set)}
     
     return render(request,'hello.html',context)
+
+@transaction.atomic
+def shopping(request):
+    new_cart = Cart()
+    new_cart.save()
+    
+    new_cartItem = CartItem()
+    new_cartItem.cart = new_cart
+    new_cartItem.product = Product(pk = 2)
+    new_cartItem.quantity = 8
+    new_cartItem.save()
+    
+    
+    return render(request,'shopingCart.html')
+
+def raw_query(request):
+   # query = Order.objects.raw()
+   #context = {'query':query}
+   #return render(request,'raw.html',context)
+   with connection.cursor() as cursor:
+       #cursor.execute('')
+       cursor.callproc('summarize_orderitems')
+    
+   return render(request,'raw.html')
+
+       
+    
+
+
+
+
+
+
 
 
