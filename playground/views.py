@@ -5,7 +5,7 @@ from django.db.models import Q,F,Count,Value
 from django.db.models.aggregates import Count,Max,Min,Avg
 from django.db.models.functions import Concat
 from django.db import transaction,connection
-from django.contrib.contenttypes.models import ContentType
+#from django.contrib.contenttypes.models import ContentType
 from store.models import Product,Customer,Collection,Order,OrderItem,Cart,CartItem
 from tags.models  import TaggedItem
 
@@ -18,13 +18,14 @@ def Hello(request):
     #query_set = OrderItem.objects.values('product_id').distinct()
     #products = Product.objects.filter(id__in = query_set).order_by('title')
     #products = query_set.order_by('-unit_price','inventory')[:10]
-    #products = query_set.filter(inventory__lt = 10,unit_price__gt = 20)
+    query_set =  Product.objects.only('title','inventory','unit_price')
+    products = query_set.filter(inventory__lt = 10,unit_price__gt = 20).order_by('unit_price')[:10]
     #products = query_set.filter(Q(inventory__lt = 10) | Q(unit_price__lt = 20))
     #products = query_set.filter(inventory = F('unit_price'))
     #products = Product.objects.filter(Q(title__istartswith= 'Bar') | Q(title__iendswith='ers')).annotate(new_id = F('id')+1).order_by('title')[:10]
-    orders = Order.objects.select_related('customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
+    #orders = Order.objects.select_related('customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
   
-    context = {'orders':list(orders)}
+    context = {'products':list(products)}
     return render(request,'hello.html',context)
 
 
@@ -58,6 +59,9 @@ def raw_query(request):
        cursor.callproc('summarize_orderitems')
     
    return render(request,'raw.html')
+
+
+
 
        
     
