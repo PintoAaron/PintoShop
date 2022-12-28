@@ -5,13 +5,12 @@
     <h1> CUSTOMERS </h1>
 
 <table border="1">
-{% for x in customers %}
+{% for x in products %}
 <tr>
-<td>{{ x.full_name}}</td>
-<td>{{ x.email }}</td>
-<td>{{ x.phone }}</td>
-<td>{{ x.birth_date }}</td>
-<td>{{ x.membership}}</td>
+<td>{{ x.id }}</td>
+<td>{{ x.title }}</td>
+<td>{{ x.description }}</td>
+<td>{{ x.unit_price }}</td>
 <td><a href="edit/{{ x.id }}">edit</a></td>
 <td><a href="delete/{{ x.id }}">delete</a></td>
 </tr>

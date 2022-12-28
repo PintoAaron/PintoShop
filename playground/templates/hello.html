@@ -7,10 +7,9 @@
 <table border="1">
 {% for x in products %}
 <tr>
-<td>{{ x.id}}</td> 
-<td>{{ x.title}}</td>
-<td>{{ x.inventory}}</td>
-<td>{{ x.unit_price}}</td>
+<td>{{ x.title }}</td>
+<td>{{ x.inventory }}</td>
+<td>{{ x.unit_price }}</td>
 <td><a href="edit/{{ x.id }}">edit</a></td>
 <td><a href="delete/{{ x.id }}">delete</a></td>
 </tr>
