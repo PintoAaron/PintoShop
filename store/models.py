@@ -112,6 +112,9 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)
     
     
+    def __str__(self) -> str:
+        return self.created_at
+    
     
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart,on_delete = models.CASCADE)
