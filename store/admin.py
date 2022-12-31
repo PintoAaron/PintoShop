@@ -20,23 +20,36 @@ class InventoryFilter(admin.SimpleListFilter):
             return queryset.filter(inventory__lt = 10)
         return queryset.filter(inventory__gte = 10)
 
-
+class OrdeItemInline(admin.TabularInline):
+    model = models.OrderItem
+    autocomplete_fields = ['product']
+    extra = 0
+    min_num = 1
+    max_num = 1
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
+    inlines = [OrdeItemInline]
     autocomplete_fields = ['customer']
-    list_display = ['placed_at','payment_status','customer']
+    list_display = ['placed_at','payment_status','customer_name']
     list_editable = ['payment_status']
     list_per_page = 10
     ordering = ['placed_at']
     list_select_related = ['customer']
     list_filter = ['payment_status']
     
+    @admin.display(ordering= 'customer')
+    def customer_name(self,order):
+       f_name = order.customer.first_name
+       l_name = order.customer.last_name
+       name = f'{f_name} {l_name}'
+       url = ( reverse('admin:store_address_changelist') + '?' + urlencode({'customer__id':str(order.customer.id)}) )
+       return format_html('<a href="{}">{}</a>', url, name)
+    
 
     
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    exclude =['promotions']
     autocomplete_fields = ['collection']
     prepopulated_fields = { 'slug': ['title'] }
     actions = ['clear_inventory']
@@ -87,6 +100,7 @@ class CustomerAdmin(admin.ModelAdmin):
     
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['featured_product']
     list_display = ['title','products_count']
     list_per_page = 10
     search_fields = ['title']
