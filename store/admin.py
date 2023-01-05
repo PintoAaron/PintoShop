@@ -25,7 +25,7 @@ class OrdeItemInline(admin.TabularInline):
     autocomplete_fields = ['product']
     extra = 0
     min_num = 1
-    max_num = 1
+    max_num = 10
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
