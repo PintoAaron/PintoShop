@@ -5,7 +5,8 @@ urlpatterns = [
     
     path('hello/',views.Hello,name='Hello'),
     path('shopping/',views.shopping,name='shopping'),
-    path('raw/',views.raw_query,name = 'raw_query')
+    path('raw/',views.raw_query,name = 'raw_query'),
+    path('products/',views.play_products,name="play_products")
    
    
 ]

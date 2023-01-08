@@ -47,30 +47,6 @@ class Product(models.Model):
         ordering = ['title']
    
    
-    '''
-    def __init__(self,title,slug,description,unit_price,inventory,last_update,collection,promotions):
-        self.title =title,
-        self.slug = slug,
-        self.description = description,
-        self.unit_price = unit_price,
-        self.inventory = inventory,
-        self.last_update = last_update,
-        #self.collection = collection,
-        self.promotions = promotions
-    
-    def serializable(self):
-        return {
-            "title":self.title,
-            "slug":self.slug,
-            "description":self.description,
-            "unit_price":self.unit_price,
-            "inventory":self.inventory,
-            "last_update":self.last_update,
-            #"collection":self.collection,
-            "promotions":self.promotions
-        }
-    '''
-
 
 class Customer(models.Model):
     

@@ -5,9 +5,12 @@ from django.db.models import Q,F,Count,Value
 from django.db.models.aggregates import Count,Max,Min,Avg
 from django.db.models.functions import Concat
 from django.db import transaction,connection
-#from django.contrib.contenttypes.models import ContentType
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from store.models import Product,Customer,Collection,Order,OrderItem,Cart,CartItem
 from tags.models  import TaggedItem
+from store.serializers import ProductSerializer
+
 
 
 
@@ -27,6 +30,12 @@ def Hello(request):
   
     context = {'products':list(products)}
     return render(request,'products.html',context)
+
+@api_view()
+def play_products(request):
+    query_set = Product.objects.filter(Q(inventory__lt =10) | Q(unit_price__gt =20)).order_by('unit_price')
+    products  = ProductSerializer(query_set)
+    return Response(products.data)
 
 
 def Get_tags(request):
@@ -50,16 +59,15 @@ def shopping(request):
     
     return render(request,'shopingCart.html')
 
-def raw_query(request):
-   # query = Order.objects.raw()
-   #context = {'query':query}
-   #return render(request,'raw.html',context)
-   with connection.cursor() as cursor:
-       #cursor.execute('')
-       cursor.callproc('summarize_orderitems')
-    
-   return render(request,'raw.html')
 
+@api_view()
+def raw_query(request):
+   with connection.cursor() as cursor:
+       a = cursor.execute("SELECT id,title,unit_price,inventory FROM store_product WHERE inventory >= 10 and unit_price < 20")
+       #cursor.callproc('summarize_orderitems')
+       items = ProductSerializer(a)
+    
+   return Response(items.data)
 
 
 
