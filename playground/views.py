@@ -31,12 +31,6 @@ def Hello(request):
     context = {'products':list(products)}
     return render(request,'products.html',context)
 
-@api_view()
-def play_products(request):
-    query_set = Product.objects.filter(Q(inventory__lt =10) | Q(unit_price__gt =20)).order_by('unit_price')
-    products  = ProductSerializer(query_set)
-    return Response(products.data)
-
 
 def Get_tags(request):
     query_set = TaggedItem.objects.get_tags_for(Product,2)
