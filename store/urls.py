@@ -3,12 +3,12 @@ from . import views
 
 urlpatterns = [
     
-    path('products/',views.product_list),
-    path('products/<int:id>/',views.product_detail),
+    path('products/',views.Productlist.as_view()),
+    path('products/<int:id>/',views.ProductDetail.as_view()),
     path('orders/', views.order_list),
     path('orders/<int:id>',views.order_detail),
-    path('collections/',views.collection_list),
-    path('collections/<int:id>/',views.collection_detail)
+    path('collections/',views.CollectionList.as_view()),
+    path('collections/<int:id>/',views.CollectionDetail.as_view())
    
    
 ]
