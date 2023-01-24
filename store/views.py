@@ -203,3 +203,40 @@ def collection_detail(request,id):
         return Response({"status":"Collection Successfully Deleted"},status=status.HTTP_204_NO_CONTENT)
         
 '''
+
+class OrderList(APIView):
+    def get(self,request):
+        query_set = Order.objects.select_related('customer').all()
+        serializer = OrderSerializer(query_set,many = True)
+        return Response(serializer.data)
+    
+    def post(self,request):
+        serializer = OrderSerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    
+class OrderDetail(APIView):
+    def get(self,request,pk):
+        order = get_object_or_404(Order,pk = pk)
+        serializer = OrderSerializer(order)
+        return Response(serializer.data)
+    
+    def put(self,request,pk):
+        order = get_object_or_404(Order,pk = pk)
+        serializer = OrderSerializer(order,data = request.data)
+        serializer.is_valid(raise_exception= True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    
+    def delete(self,request,pk):
+        order = get_object_or_404(Order,pk = pk)
+        if order.orderitems.count()> 0:
+            return Response({"error":"Order cant be deleted because there are order items in this order "},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        order.delete()
+        return Response({"status":"Order Successfully deleted"},status=status.HTTP_204_NO_CONTENT)
+        
+        
+    

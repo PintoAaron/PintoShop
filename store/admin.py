@@ -31,7 +31,7 @@ class OrdeItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrdeItemInline]
     autocomplete_fields = ['customer']
-    list_display = ['placed_at','payment_status','customer_name']
+    list_display = ['id','placed_at','payment_status','customer_name']
     list_editable = ['payment_status']
     list_per_page = 10
     ordering = ['placed_at']
@@ -122,13 +122,19 @@ class CollectionAdmin(admin.ModelAdmin):
 @admin.register(models.OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
     list_select_related = ['order','product']
-    list_display = ['product_name','order_status','order_date']
+    list_display = ['product_name','order_id','order_status','order_date']
     list_per_page = 10
     
     
     
     def order_date(self,orderitem):
         return orderitem.order.placed_at
+    
+
+    def order_id(self,orderitem):
+        url = ( reverse('admin:store_orderitem_changelist')  + '?' + urlencode({'order__id':str(orderitem.order.id)}) )
+        return format_html('<a href="{}">{}</a>',url,orderitem.order.id)
+    
     
     def order_status(self,orderitem):
         state =  orderitem.order.payment_status
