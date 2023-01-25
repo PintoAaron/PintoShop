@@ -41,8 +41,9 @@ class CustomerSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['id','placed_at','customer']
-    
+        fields = ['id','placed_at','customer','order_items']
+        
+    order_items = serializers.IntegerField(read_only = True)
     customer = serializers.StringRelatedField()    
     
     #id = serializers.IntegerField()
