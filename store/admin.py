@@ -109,7 +109,6 @@ class CollectionAdmin(admin.ModelAdmin):
     
     @admin.display(ordering='products_count')
     def products_count(self,collection):
-       # return collection.products_count
        url = ( reverse('admin:store_product_changelist')  + '?' + urlencode({'collection__id':str(collection.id)}) )
        return format_html('<a href="{}">{}</a>',url,collection.products_count)
     
@@ -177,3 +176,17 @@ class CartItemAdmin(admin.ModelAdmin):
     list_select_related = ['cart','product']
     list_per_page = 10
     
+@admin.register(models.Review)
+class ReviewAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['product']
+    list_display = ['id','name','product_name','description','date']
+    list_per_page = 10
+    list_select_related = ['product']
+    search_fields = ['name__istartswith','description']
+    #list_filter = ['lastupdate']
+    
+    
+    def product_name(self,review):
+        url = (reverse('admin:store_product_changelist') + '?' + urlencode({'product__id':str(review.product.id)}))
+        return format_html('<a href="{}">{}</a>',url,review.product.title)
+        

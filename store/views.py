@@ -6,8 +6,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
-from .models import Product,Customer,Order,Collection,OrderItem
-from .serializers import ProductSerializer,OrderSerializer,CollectionSerializer
+from .models import Product,Customer,Order,Collection,OrderItem,Review
+from .serializers import ProductSerializer,OrderSerializer,CollectionSerializer,ReviewSerializer
 
 
 
@@ -282,7 +282,7 @@ class OrderList(ListCreateAPIView):
 class OrderDetail(RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.select_related('customer').annotate(order_items= Count('orderitems')).all()
     serializer_class = OrderSerializer
-    
+     
     def delete(self,request,pk):
         order = get_object_or_404(Order,pk=pk)
         if order.orderitems.count() > 0:
@@ -290,8 +290,12 @@ class OrderDetail(RetrieveUpdateDestroyAPIView):
         order.delete()
         return Response({"status":"Order Successfully deleted"},status=status.HTTP_204_NO_CONTENT)
         
-        
-        
+
+class ReviewViewset(ModelViewSet):
+    queryset = Review.objects.select_related('product').all()
+    serializer_class = ReviewSerializer
+    
+
         
         
         

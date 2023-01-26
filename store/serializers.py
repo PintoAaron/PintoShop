@@ -1,6 +1,6 @@
 from decimal import Decimal
 from rest_framework import serializers
-from .models import Product,Customer,Order,Collection
+from .models import Product,Customer,Order,Collection,Review
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -50,3 +50,12 @@ class OrderSerializer(serializers.ModelSerializer):
     #placed_at = serializers.DateTimeField()
     #customer = serializers.StringRelatedField()        
     
+    
+class ReviewSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Review
+        fields = ['id','name','description','date','product']
+        
+    
+        
