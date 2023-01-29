@@ -20,7 +20,7 @@ class InventoryFilter(admin.SimpleListFilter):
             return queryset.filter(inventory__lt = 10)
         return queryset.filter(inventory__gte = 10)
 
-class OrdeItemInline(admin.TabularInline):
+class OrderItemInline(admin.TabularInline):
     model = models.OrderItem
     autocomplete_fields = ['product']
     extra = 0
@@ -29,7 +29,7 @@ class OrdeItemInline(admin.TabularInline):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
-    inlines = [OrdeItemInline]
+    inlines = [OrderItemInline]
     autocomplete_fields = ['customer']
     list_display = ['id','placed_at','payment_status','customer_name']
     list_editable = ['payment_status']

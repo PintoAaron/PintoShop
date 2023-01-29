@@ -1,13 +1,15 @@
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
-from rest_framework.decorators import api_view
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.pagination import PageNumberPagination
 from .models import Product,Customer,Order,Collection,OrderItem,Review
 from .serializers import ProductSerializer,OrderSerializer,CollectionSerializer,ReviewSerializer
+from .filters import ProductFilter
+from .pagination import DefaultPagination
 
 
 
@@ -88,6 +90,12 @@ class ProductDetail(RetrieveUpdateDestroyAPIView):
 class ProductViewset(ModelViewSet):
     queryset = Product.objects.select_related('collection').all()
     serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
+    filterset_class = ProductFilter
+    pagination_class = DefaultPagination
+    search_fields = ['title','description']
+    ordering_fields = ['unit_price']
+    
         
     def get_serializer_context(self):
         return {'request':self.request}
@@ -275,20 +283,19 @@ class OrderDetail(APIView):
         return Response({"status":"Order Successfully deleted"},status=status.HTTP_204_NO_CONTENT)
 '''        
         
-class OrderList(ListCreateAPIView):
-   queryset = Order.objects.select_related('customer').annotate(order_items= Count('orderitems')).all()
-   serializer_class = OrderSerializer
-   
-class OrderDetail(RetrieveUpdateDestroyAPIView):
-    queryset = Order.objects.select_related('customer').annotate(order_items= Count('orderitems')).all()
-    serializer_class = OrderSerializer
+
+class OrderViewset(ModelViewSet):
+     queryset = Order.objects.select_related('customer').annotate(order_items= Count('orderitems')).all()
+     serializer_class = OrderSerializer
      
-    def delete(self,request,pk):
-        order = get_object_or_404(Order,pk=pk)
-        if order.orderitems.count() > 0:
-            return Response({"error":"Order cant be deleted because there are order items in this order "},status=status.HTTP_405_METHOD_NOT_ALLOWED)
-        order.delete()
-        return Response({"status":"Order Successfully deleted"},status=status.HTTP_204_NO_CONTENT)
+     
+     
+     def destroy(self, request, *args, **kwargs):
+         if OrderItem.objects.filter(order_id = kwargs['pk']).count() > 0:
+                return Response({"error":"Order cant be deleted because there are order items in this order "},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+         return super().destroy(request, *args, **kwargs)
+   
+    
         
 
 class ReviewViewset(ModelViewSet):
@@ -296,7 +303,6 @@ class ReviewViewset(ModelViewSet):
     serializer_class = ReviewSerializer
     
 
+
         
-        
-        
-        
+    
