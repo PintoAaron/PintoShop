@@ -161,21 +161,26 @@ class AddressAdmin(admin.ModelAdmin):
     
 @admin.register(models.Cart)
 class CartAdmin(admin.ModelAdmin):
-    list_display = ['created_at','cart_items']
+    list_display = ['id','created_at','cart_items']
     list_per_page = 10
     
+    @admin.display(ordering='cart_items')
     def cart_items(self,cart):
-        return self.cart_items
+        url = (reverse('admin:store_cartitem_changelist') + '?' + urlencode({'cart__id':str(cart.id)}))
+        return format_html('<a href="{}">{}</a>',url,cart.cart_items)
     
     def get_queryset(self, request):
-        return super().get_queryset(request).annotate(cart_items= Count('cartitem'))
+        return super().get_queryset(request).annotate(cart_items= Count('items'))
     
 @admin.register(models.CartItem)
 class CartItemAdmin(admin.ModelAdmin):
-    list_display = ['cart','product','quantity']
+    list_display = ['product','quantity','cartId']
     list_select_related = ['cart','product']
     list_per_page = 10
     
+    def cartId(self,cart_item):
+        return cart_item.cart.id
+
 @admin.register(models.Review)
 class ReviewAdmin(admin.ModelAdmin):
     autocomplete_fields = ['product']
