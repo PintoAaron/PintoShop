@@ -80,6 +80,7 @@ class Customer(models.Model):
     
     class Meta:
         ordering = ['user__first_name','user__last_name']
+        permissions = [('view_history','Can view history')]
 
     #class Meta:
     #   db_table = 'store_customers'
@@ -101,6 +102,9 @@ class Order(models.Model):
     payment_status = models.CharField(max_length=1,choices = PAYMENT_STATUS,default = PENDING_STATUS)
     customer = models.ForeignKey(Customer,on_delete = models.PROTECT)
     
+    
+    class Meta:
+        permissions = [('cancel_order','Can cancel order')]
     
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,on_delete=models.PROTECT,related_name="orderitems")

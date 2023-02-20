@@ -27,16 +27,6 @@ class ProductSerializer(serializers.ModelSerializer):
         return product.unit_price * Decimal(1.1)
     
     
-    
-class CustomerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Customer
-        fields = ['id','first_name','last_name','email','phone','birth_date','membership']
-   # id = serializers.IntegerField()
-   #first_name = serializers.CharField(max_length = 255)
-   #last_name = serializers.CharField(max_length = 255)
-
-
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -133,8 +123,12 @@ class UpdateCartItemSerializer(serializers.ModelSerializer):
          
     
     
-    
-    
+class CustomerSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(read_only = True)
+    class Meta:
+        model = Customer 
+        fields = ['id','user_id','phone','birth_date','membership']
+        
     
         
         
