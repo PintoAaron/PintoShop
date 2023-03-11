@@ -9,7 +9,7 @@ from rest_framework.viewsets import ModelViewSet,GenericViewSet
 from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin,ListModelMixin,UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated,AllowAny,IsAdminUser
 from .models import Product,Customer,Order,Collection,OrderItem,Review,Cart,CartItem
-from .serializers import ProductSerializer,OrderSerializer,CustomerSerializer,CollectionSerializer,ReviewSerializer,CartSerializer,CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer
+from .serializers import ProductSerializer,OrderSerializer,CustomerSerializer,CollectionSerializer,ReviewSerializer,CartSerializer,CartItemSerializer,CreateOrderSerializer,AddCartItemSerializer,UpdateCartItemSerializer
 from .filters import ProductFilter
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly,ViewCustomerHistoryPermission
@@ -287,19 +287,6 @@ class OrderDetail(APIView):
         return Response({"status":"Order Successfully deleted"},status=status.HTTP_204_NO_CONTENT)
 '''        
         
-
-class OrderViewset(ModelViewSet):
-     queryset = Order.objects.select_related('customer').annotate(order_items= Count('orderitems')).all()
-     serializer_class = OrderSerializer
-     
-     
-     
-     def destroy(self, request, *args, **kwargs):
-         if OrderItem.objects.filter(order_id = kwargs['pk']).count() > 0:
-                return Response({"error":"Order cant be deleted because there are order items in this order "},status=status.HTTP_405_METHOD_NOT_ALLOWED)
-         return super().destroy(request, *args, **kwargs)
-   
-    
         
 
 class ReviewViewset(ModelViewSet):
@@ -355,8 +342,31 @@ class CustomerViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+
+
+class OrderViewSet(ModelViewSet):
     
-            
+    
+    def create(self, request, *args, **kwargs):
+        seriaizer = CreateOrderSerializer(data = request.data,context = {'user_id':self.request.user.id})
+        seriaizer.is_valid(raise_exception=True)
+        order = seriaizer.save()
+        seriaizer = OrderSerializer(order)
+        return Response(seriaizer.data)
+    
+     
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CreateOrderSerializer
+        return OrderSerializer
+    permission_classes = [IsAuthenticated]
+    
+    
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Order.objects.all()
+        (customer,created) = Customer.objects.only('id').get_or_create(user_id = self.request.user.id)
+        return Order.objects.filter(customer_id = customer)
      
         
         

@@ -31,7 +31,7 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
     autocomplete_fields = ['customer']
-    list_display = ['id','placed_at','payment_status','customer_name']
+    list_display = ['id','placed_at','payment_status','customer_name','number_of_items']
     list_editable = ['payment_status']
     list_per_page = 10
     ordering = ['placed_at']
@@ -40,11 +40,21 @@ class OrderAdmin(admin.ModelAdmin):
     
     @admin.display(ordering= 'customer')
     def customer_name(self,order):
-       f_name = order.customer.first_name
-       l_name = order.customer.last_name
+       f_name = order.customer.user.first_name
+       l_name = order.customer.user.last_name
        name = f'{f_name} {l_name}'
        url = ( reverse('admin:store_address_changelist') + '?' + urlencode({'customer__id':str(order.customer.id)}) )
        return format_html('<a href="{}">{}</a>', url, name)
+   
+    @admin.display(ordering='order_items')
+    def number_of_items(self,order):
+        url = (reverse('admin:store_orderitem_changelist') + '?' + urlencode({'order__id':str(order.id)}))
+        return format_html('<a href="{}">{}</a>',url,order.order_items)
+        
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(order_items = Count('orderitems'))
+       
     
 
     
@@ -80,7 +90,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['first_name','last_name','membership','birth_date','orders_count',]
+    list_display = ['id','first_name','last_name','membership','birth_date','orders_count',]
     ordering = ['user__first_name','user__last_name']
     list_editable = ['membership']
     list_per_page = 10
