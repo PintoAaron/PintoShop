@@ -70,7 +70,7 @@ class Customer(models.Model):
     birth_date = models.DateField(null = True)
     membership = models.CharField(max_length =1, choices = MEMBERSHIP_STATUS,default = MEMBERSHIP_BRONZE)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
+ 
     
     def __str__(self) -> str:
         return f'{self.user.first_name} {self.user.last_name}'
@@ -90,7 +90,7 @@ class Customer(models.Model):
     #class Meta:
     #   db_table = 'store_customers'
     #   indexes = [models.Index(fields=['first_name','last_name'])]    
-    
+
 class Order(models.Model):
     PENDING_STATUS = 'P'
     COMPLETE_STATUS = 'C'

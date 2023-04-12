@@ -1,10 +1,13 @@
 import re
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.conf import settings
+from django.core.mail import send_mail,mail_admins,BadHeaderError, EmailMessage
 from django.db.models import Q,F,Count,Value
 from django.db.models.aggregates import Count,Max,Min,Avg
 from django.db.models.functions import Concat
 from django.db import transaction,connection
+from templated_mail.mail import BaseEmailMessage
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from store.models import Product,Customer,Collection,Order,OrderItem,Cart,CartItem
@@ -64,6 +67,29 @@ def raw_query(request):
    return Response(items.data)
 
 
+def mails(request):
+    try:
+        #send_mail('Activate Your Account','Please you have to activate your account to conti9nue shopping with us.',settings.DEFAULT_FROM_EMAIL,['aaron@gmail.com'])
+        message = EmailMessage('Requested Image','Please you have to activate your account to conti9nue shopping with us.','from@admin.com',['aaron@gmail.com'])
+        message.attach_file('playground/static/images/category.png')
+        message.send()
+    except BadHeaderError:
+        pass
+    return HttpResponse('mail Successfully Sent')
+
+
+def template_mail(request):
+    try:
+        message = BaseEmailMessage(
+        template_name= 'emails/mail.html',
+        context= {'name': 'Macquena'}
+        )
+        message.attach_file('playground/static/images/category.png')
+        message.send(['Bod@gmail.com'])
+    except BadHeaderError:
+        pass 
+    return HttpResponse('Mail Successfully Delivered')
+    
 
        
     

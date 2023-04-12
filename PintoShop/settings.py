@@ -172,3 +172,10 @@ DJOSER = {'SERIALIZERS':{'user_create':'core.serializers.UserCreateSerializer',
                          'current_user':'core.serializers.UserSerializer'}}
 
 #SIMPLE_JWT = {'ACCESS_TOKEN_LIFETIME':timedelta(days=1)}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = '2525'
+DEFAULT_FROM_EMAIL = 'from@Pintoshop.com' 

@@ -118,7 +118,7 @@ class UpdateCartItemSerializer(serializers.ModelSerializer):
     class Meta:
          model  = CartItem
          fields = ['quantity']
-         
+    
     
     
 class CustomerSerializer(serializers.ModelSerializer):
