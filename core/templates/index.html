@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PintoShop - Online Shopping</title>
+    <style>
+        /* Reset some default styles */
+        body, ul, li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        /* Tab bar styling */
+        .tab-bar {
+            background-color: #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            margin: 0 10px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .tab:hover {
+            background-color: #777;
+        }
+
+        /* Product showcase */
+        .product-showcase {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            width: 300px;
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to PintoShop - Your One-Stop Online Shopping Destination</h1>
+    </header>
+    <nav class="tab-bar">
+        <a href="#" class="tab">Home</a>
+        <a href="#" class="tab">Shop</a>
+        <a href="#" class="tab">Categories</a>
+        <a href="#" class="tab">Cart</a>
+        <a href="#" class="tab">Contact</a>
+    </nav>
+    <div class="container">
+        <h2>Featured Products</h2>
+        <div class="product-showcase">
+            <!-- Sample product cards -->
+            <div class="product-card">
+                <img src="product1.jpg" alt="Product 1">
+                <h3>Product 1</h3>
+                <p>Description of Product 1.</p>
+                <p><strong>$19.99</strong></p>
+                <button>Add to Cart</button>
+            </div>
+            <div class="product-card">
+                <img src="product2.jpg" alt="Product 2">
+                <h3>Product 2</h3>
+                <p>Description of Product 2.</p>
+                <p><strong>$29.99</strong></p>
+                <button>Add to Cart</button>
+            </div>
+            <!-- Add more product cards here -->
+        </div>
+    </div>
+</body>
+</html>

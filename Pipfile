@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 mysqlclient = "*"
 redis = "*"
+psycopg2 = "*"
+psycopg2-binary = "*"
+whitenoise = "*"
 
 [dev-packages]
 pytest = "*"
