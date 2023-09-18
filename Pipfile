@@ -9,6 +9,9 @@ redis = "*"
 psycopg2 = "*"
 psycopg2-binary = "*"
 whitenoise = "*"
+python-dotenv = "*"
+gunicorn = "*"
+dj-database-url = "*"
 
 [dev-packages]
 pytest = "*"
