@@ -4,7 +4,6 @@ from store.models import Customer
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
-    
     #def save(self, **kwargs):
     #    user = super().save(**kwargs)
     #    Customer.objects.create(user = user)

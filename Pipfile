@@ -5,8 +5,11 @@ name = "pypi"
 
 [packages]
 mysqlclient = "*"
+redis = "*"
 
 [dev-packages]
+pytest = "*"
+pytest-django = "*"
 
 [requires]
 python_version = "3.9"
